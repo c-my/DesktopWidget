@@ -1,7 +1,6 @@
 #include "widget.h"
 #include "ui_widget.h"
-#include "QDesktopWidget"
-#include "QTimer"
+#include <QDesktopWidget>
 #include <windows.h>
 
 Widget::Widget(QWidget *parent) :
@@ -19,7 +18,15 @@ Widget::Widget(QWidget *parent) :
     //边缘隐藏定时器
     QTimer *timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(hideUpdata()));
-    timer->start(1);
+    timer->start(10);
+    tabWidget = new QTabWidget(this);
+    tabWidget->setTabPosition(QTabWidget::West);
+    QLabel *label1 = new QLabel(tr("新分组中的内容"));
+    QLabel *label2 = new QLabel(tr("新新分组中的内容"));
+    tabWidget->addTab(label1, tr("新分组"));
+    tabWidget->addTab(label2, tr("新新分组"));
+    mainLayout = new QHBoxLayout(this);
+    mainLayout->addWidget(tabWidget);
 }
 
 Widget::~Widget()
@@ -32,14 +39,17 @@ void Widget::hideUpdata()
     static bool isHide = false;
     if(!isHide)
     {
+        //获取鼠标的位置
         POINT pt;
         GetCursorPos(&pt);
-        int hideSpeed = 2;//每次更新移动的量
+        int x = pt.x;
+        int y = pt.y;
+        //设置边缘隐藏的参数
+        int hideSpeed = 20;//每次更新移动的量
         int leftRemain = 20;
         int rightRemain = 20;
         int topRemain = 20;
-        int x = pt.x;
-        int y = pt.y;
+        //获取窗口尺寸
         int widgetHeight = this->frameGeometry().height();
         int widgetWidth = this->frameGeometry().width();
         if(x>=this->x() && x<=this->x()+widgetWidth && y>=this->y() && y<=this->y()+widgetHeight)
@@ -61,7 +71,7 @@ void Widget::hideUpdata()
                     HidePos = NONE;
                 break;
             case TOP:
-                if(this->y()<-hideSpeed)
+                if(this->y()<0)
                     this->move(this->x(),this->y()+hideSpeed);
                 else
                     HidePos = NONE;
