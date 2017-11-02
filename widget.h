@@ -6,6 +6,7 @@
 #include <QTabWidget>
 #include <QLabel>
 #include <QLayout>
+#include <QFile>
 
 namespace Ui {
 class Widget;

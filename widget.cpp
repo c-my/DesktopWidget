@@ -2,6 +2,7 @@
 #include "ui_widget.h"
 #include <QDesktopWidget>
 #include <windows.h>
+#include "maintabstyle.h"
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -21,10 +22,11 @@ Widget::Widget(QWidget *parent) :
     timer->start(10);
     tabWidget = new QTabWidget(this);
     tabWidget->setTabPosition(QTabWidget::West);
+    tabWidget->tabBar()->setStyle(new MainTabStyle);
     QLabel *label1 = new QLabel(tr("新分组中的内容"));
     QLabel *label2 = new QLabel(tr("新新分组中的内容"));
     tabWidget->addTab(label1, tr("新分组"));
-    tabWidget->addTab(label2, tr("新新分组"));
+    tabWidget->addTab(label2, tr("超长标题的新新分组"));
     mainLayout = new QHBoxLayout(this);
     mainLayout->addWidget(tabWidget);
 }
